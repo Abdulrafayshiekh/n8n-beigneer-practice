@@ -1,0 +1,176 @@
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8f902596-b776-4285-95ff-2e9130593a7b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IEm3RulJw_I3cdnz1GhWKS5v5Y3z3f4Yk1bHTd0uwhY",
+          "mode": "list",
+          "cachedResultName": " secound",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IEm3RulJw_I3cdnz1GhWKS5v5Y3z3f4Yk1bHTd0uwhY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IEm3RulJw_I3cdnz1GhWKS5v5Y3z3f4Yk1bHTd0uwhY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e91def8c-0e19-45ee-b749-937c9ad258f0",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7iZOiGpYBldj4DNu",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0927ffca-ca4a-4270-a8c8-047733b89f82",
+              "leftValue": "={{ $json[\"Due Date\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "dateTime",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "30a14691-277f-4139-9cb8-5a599caaa7c9",
+              "leftValue": "={{ $json[\"Due Date\"].toDateTime().toISODate() }}",
+              "rightValue": "={{ $now.plus(1, 'day').toISODate() }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "cf1b2204-012f-45ae-a82d-db8ddacd0e42",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fromEmail": "abdulrafaydev9@gmail.com",
+        "toEmail": "abdulrafayshiekh0@gmail.com",
+        "subject": "Reminder",
+        "emailFormat": "text",
+        "text": "due date is tomorrow",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "c6b6e23e-dca3-4d0b-90e1-66f1d0d28b70",
+      "name": "Send an Email",
+      "webhookId": "3d5e2bd1-b42d-4262-bf15-d7ed74242274",
+      "credentials": {
+        "smtp": {
+          "id": "gey2VWiy2LchovkP",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "168008a8-92d3-4e57-bc45-c5932d033260",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6664b8cd7ff1df6a2acae8cd8393257f87bc377254bbf8997863498963b2acd7"
+  },
+  "nodeGroups": [],
+  "id": "mGvS4kbCXzpmrVlb",
+  "tags": []
+}

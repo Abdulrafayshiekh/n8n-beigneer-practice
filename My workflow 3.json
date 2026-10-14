@@ -1,0 +1,146 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "59895630-a0d1-43b0-b691-94a76330c184",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=31.5204&longitude=74.3587&daily=temperature_2m_max,precipitation_probability_max&timezone=auto&forecast_days=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "22f7518a-2601-478b-ab88-2c6054008506",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0e356e67-4af6-4b92-824e-1208557ab148",
+              "leftValue": "={{ $json.daily.temperature_2m_max[0] }}",
+              "rightValue": 30,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "a63a1f8e-7fed-4b3a-a840-55bf9df535b6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "abdulrafayshiekh0@gmail.com",
+        "subject": "Rain alert",
+        "emailType": "text",
+        "message": "rain forcast alert",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "d3674ae1-042c-4912-b288-94b704947d2a",
+      "name": "Send a message",
+      "webhookId": "b30e4399-43ee-46aa-be29-c53497af847b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ScZuPo1b0jKLHGlG",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0250e5b7-cc3c-4a7c-96ab-943efb9eba20",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6664b8cd7ff1df6a2acae8cd8393257f87bc377254bbf8997863498963b2acd7"
+  },
+  "nodeGroups": [],
+  "id": "cVVufCNshGZ8YNjS",
+  "tags": []
+}
